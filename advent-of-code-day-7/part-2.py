@@ -1,3 +1,5 @@
+# this code took over 2 minutes to run 🤩🤩🤩 (i am a very efficient programmer!!!!!!!!!!!!)
+
 file1 = open("./advent-of-code-day-7/input.txt", "r")
 
 inp = file1.read()
@@ -7,18 +9,24 @@ file1.close()
 def getPossibleNumbers(numbersLength, numPossible):
     array = []
     
-    # converts each number from 0 to numbersLength to base 2 for the strings of possible combinations
+    # converts each number from 0 to numbersLength to base 3 for the strings of possible combinations
     for i in range(numPossible):
-        newNum = str(bin(i))[2:]
+        # https://stackoverflow.com/a/34559825
+        nums = []
+        while i:
+            i, r = divmod(i, 3)
+            nums.append(str(r))
+        newNum = str("".join(reversed(nums)))
+        
         if len(newNum) < numbersLength:
             while len(newNum) < numbersLength:
                 newNum = "0" + newNum
         array.append(newNum)
-    
+
     return array
 
 def areTheNumbersEqual(value, numbers):
-    numPossible = 2**(len(numbers)-1)
+    numPossible = 3**(len(numbers)-1)
     # get an array of strings of numbers; each string of nums is a possible combination of + and * that lets the numbers = the value
     possibleArray = getPossibleNumbers(len(numbers)-1, numPossible) # 0 for add, 1 for multiply
 
@@ -30,6 +38,8 @@ def areTheNumbersEqual(value, numbers):
                 total += int(numbers[n])
             elif possibleString[n-1] == "1":
                 total *= int(numbers[n])
+            elif possibleString[n-1] == "2":
+                total = int(str(total) + numbers[n])
         if total == value:
             return True
 
